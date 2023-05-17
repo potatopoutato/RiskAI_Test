@@ -4,7 +4,7 @@ Work Sample for Data Engineer
 To run the docker file. You will have to download all the data for stock and efts from https://www.kaggle.com/datasets/jacksoncrow/stock-market-dataset and save it in a new directory as the docker files inside a folder named data.
 
 KEY POINTS:
-The docker files are in work-samplewithdocker.rar inside ‘samar’ folder.
+//Comment//The docker files are in work-samplewithdocker.rar inside ‘samar’ folder.//
 Problem 1 and 2 are implemented but Problem 2 and 3 might take some time to run as the data is stored parallelly in runtime with each csv being saved seperately.
 Task 3 is still under development.
 To run the code in your machine with docker  first build the docker which is highlighted(see below) then run the docker which is highlighted(further below) in yellow.
