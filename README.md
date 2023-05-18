@@ -3,7 +3,9 @@ Work Sample for Data Engineer
 
 To run the docker file. You will have to download all the data for stock and efts from https://www.kaggle.com/datasets/jacksoncrow/stock-market-dataset and save it in a new directory as the docker files inside a folder named data.
 
-The Dockerfile is uploaded in the repository
+The Dockerfile is uploaded in the github repository.
+
+After the docker is set up and the scala environment with Spark is up and running you need to copy the code from Problem Set 1 to Problem Set 3 in the scala environment. Preferrably copy each problem seperately as problem 2 and 3 takes up some time depending on your hardware.
 
 
 KEY POINTS:
