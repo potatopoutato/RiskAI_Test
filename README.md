@@ -4,6 +4,7 @@ Work Sample for Data Engineer
 To run the docker file. You will have to download all the data for stock and efts from https://www.kaggle.com/datasets/jacksoncrow/stock-market-dataset and save it in a new directory as the docker files inside a folder named data.
 
 Your directiories should be like: your-docker-repository-in-system/data/etfs/and stocks
+
 your dockerfile should be here: your-docker-repository-in-system/Dockerfile
 
 The Dockerfile is uploaded in the github repository.
