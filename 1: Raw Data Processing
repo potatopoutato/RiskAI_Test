@@ -1,0 +1,55 @@
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.expressions.Window
+import org.apache.spark.sql.functions._
+import org.apache.spark.ml.regression.RandomForestRegressor
+import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.{Pipeline, PipelineModel}
+import org.apache.spark.ml.evaluation.RegressionEvaluator
+
+        //Unit-Test
+        //val stocks = spark.read.format("csv").option("header","true").load("/data/etfs/AAAU.csv")
+
+        //stocks.schema
+        //stocks.show
+        //UNIT TEST
+ 
+
+
+// Define the schema for the merged data
+val schema = StructType(Seq(
+  StructField("Date", StringType, nullable = true),
+  StructField("Open", FloatType, nullable = true),
+  StructField("High", FloatType, nullable = true),
+  StructField("Low", FloatType, nullable = true),
+  StructField("Close", FloatType, nullable = true),
+  StructField("Adj Close", FloatType, nullable = true),
+  StructField("Volume", FloatType, nullable = true),
+  StructField("Symbol", StringType, nullable = true),
+  StructField("Security Name", StringType, nullable = true)
+))
+
+
+// Function to read CSV files and create a dataframe with the specified schema
+def readCSVFiles(folderPath: String, schema: StructType): DataFrame = {
+  val df = spark.read.format("csv")
+    .schema(schema)
+    .option("header", "true")
+    .load(folderPath)
+  df
+}
+
+// Read CSV files from the etfs folder
+val etfsFolderPath = "/data/etfs"  // Replace with the actual path to the etfs folder
+val etfsDF = readCSVFiles(etfsFolderPath, schema)
+
+// Read CSV files from the stocks folder
+val stocksFolderPath = "/data/stocks"  // Replace with the actual path to the stocks folder
+val stocksDF = readCSVFiles(stocksFolderPath, schema)
+
+// Union the two dataframes to create a single dataframe with merged data
+val mergedDF = etfsDF.union(stocksDF)
+
+// Show the resulting dataframe
+mergedDF.show()   //This will show the resulting dataframe with merged df for stocks and etfs
+ 
