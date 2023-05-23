@@ -10,7 +10,7 @@ To run the docker file. You will have to download all the data for stock and eft
 
     //# Download necessary files from a remote directory
     //RUN curl -O <remote_file_url> -o /data/<filename>
-    //Since the files are in a Kaggle repository in .zip we will be copying them manually to our docker repository in folder named 'data'
+    //Since the files are in a Kaggle repository in .zip format, we will be copying them manually to our docker repository in folder named 'data'
 
 Your directiories should be like: your-docker-repository-in-system/data/etfs/and stocks
 
