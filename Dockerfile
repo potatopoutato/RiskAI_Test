@@ -15,4 +15,6 @@ ENV PATH=$PATH:$SPARK_HOME/bin
 # Start the Spark shell
 CMD spark-shell --master local[*]
 
+# Make sure the necessary files or resources are present in the ./data directory
+# before building the Docker image.
 COPY ./data /data
