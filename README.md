@@ -64,31 +64,37 @@ STEP 2: docker run -it spark_shell:v2
 //Objective: Ingest and process raw stock market datasets.
 
 
-import org.apache.spark.sql.types._ 
-import org.apache.spark.sql.types.{IntegerType,StringType,StructType,StructField} 
-import org.apache.spark.sql.{Row, SparkSession}
-import org.apache.spark.sql.{SparkSession, DataFrame}
+import org.apache.spark.sql.types._
+import org.apache.spark.sql.{DataFrame, SparkSession}
+import org.apache.spark.sql.expressions.Window
+import org.apache.spark.sql.functions._
+import org.apache.spark.ml.regression.RandomForestRegressor
+import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.{Pipeline, PipelineModel}
+import org.apache.spark.ml.evaluation.RegressionEvaluator
 
-//Unit-Test
-//val stocks = spark.read.format("csv").option("header","true").load("/data/etfs/AAAU.csv")
+        //Unit-Test
+        //val stocks = spark.read.format("csv").option("header","true").load("/data/etfs/AAAU.csv")
 
-//stocks.schema
-//stocks.show
-//UNIT TEST
+        //stocks.schema
+        //stocks.show
+        //UNIT TEST
  
+
 
 // Define the schema for the merged data
 val schema = StructType(Seq(
-  StructField("Symbol", StringType, nullable = true),
-  StructField("Security Name", StringType, nullable = true),
   StructField("Date", StringType, nullable = true),
   StructField("Open", FloatType, nullable = true),
   StructField("High", FloatType, nullable = true),
   StructField("Low", FloatType, nullable = true),
   StructField("Close", FloatType, nullable = true),
   StructField("Adj Close", FloatType, nullable = true),
-  StructField("Volume", FloatType, nullable = true)
+  StructField("Volume", FloatType, nullable = true),
+  StructField("Symbol", StringType, nullable = true),
+  StructField("Security Name", StringType, nullable = true)
 ))
+
 
 // Function to read CSV files and create a dataframe with the specified schema
 def readCSVFiles(folderPath: String, schema: StructType): DataFrame = {
@@ -111,9 +117,7 @@ val stocksDF = readCSVFiles(stocksFolderPath, schema)
 val mergedDF = etfsDF.union(stocksDF)
 
 // Show the resulting dataframe
-mergedDF.show()
-
-//MERGED DF WITH NEW SCHEMA:
+mergedDF.show()   //This will show the resulting dataframe with merged df for stocks and etfs
  
 
 //Tasks:
@@ -137,7 +141,7 @@ val mergedDFWithRollingMed = mergedDFWithMovingAvg.withColumn("adj_close_rolling
 // Define the output directory path
 val outputPath = "/data/merged_with_rolling.csv"  // Replace with the desired output path for the merged dataset with rolling statistics
 
-// Write the merged DataFrame with rolling statistics to the output path with a single partition
+// Write the merged DataFrame with rolling statistics to the output path with 10 partitions
 mergedDFWithRollingMed
   .coalesce(10)  // Set the number of partitions to 10
   .write
@@ -203,6 +207,7 @@ model.write.overwrite().save(modelOutputPath)
 val logPath = "/data/logs"  // Replace with the desired output path for the log files
 val logData = s"MAE: $mae\nMSE: $mse"
 sc.parallelize(Seq(logData)).coalesce(10).saveAsTextFile(logPath)
+
 
 References:
 https://yuchen52.medium.com/getting-started-with-docker-scala-sbt-d91f8ac22f5f
