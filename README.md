@@ -18,9 +18,6 @@ Problem 1 and 2 are implemented but Problem 2 and 3 might take some time to run 
 Task 3 is still under development.
 To run the code in your machine with docker  first build the docker which is highlighted(see below STEP 1) then run the docker which is highlighted(further below STEP 2) in yellow.
 
-//The following workflow shows the working of the code:
-
-data --->docker --->spark-shell --->schema --->df --->dfwithmovingavg --->dfwithrollingavg --->outputdir --->testdata --->result --->predictions --->mae,mse --->modelPath --->logMessage --->logPath
 
 To build docker in cmd first:
 STEP 1:    docker build -t spark_shell:v2 .
