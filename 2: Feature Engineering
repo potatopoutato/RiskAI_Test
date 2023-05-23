@@ -1,0 +1,32 @@
+//Tasks:
+//Calculate the moving average of the trading volume (Volume) of 30 days per each stock and ETF, and retain it in a newly added column vol_moving_avg.
+//Similarly, calculate the rolling median and retain it in a newly added column adj_close_rolling_med.
+//Retain the resulting dataset into the same format as Problem 1, but in its own stage/directory distinct from the first.
+//(Bonus) Write unit tests for any relevant logic.
+
+import org.apache.spark.sql.expressions.Window
+import org.apache.spark.sql.functions._
+
+// Calculate the moving average of the trading volume (Volume) of 30 days per each stock and ETF
+val windowSpec = Window.partitionBy("Symbol").orderBy("Date").rowsBetween(-29, 0)
+val mergedDFWithMovingAvg = mergedDF.withColumn("vol_moving_avg", avg("Volume").over(windowSpec))
+
+// Calculate the rolling median of the Adj Close per each stock and ETF
+val rollingWindowSpec = Window.partitionBy("Symbol").orderBy("Date").rowsBetween(-29, 0)
+val mergedDFWithRollingMed = mergedDFWithMovingAvg.withColumn("adj_close_rolling_med", percentile_approx(col("Adj Close"), lit(0.5), lit(1000)).over(rollingWindowSpec))
+
+
+// Define the output directory path
+val outputPath = "/data/merged_with_rolling.csv"  // Replace with the desired output path for the merged dataset with rolling statistics
+
+// Write the merged DataFrame with rolling statistics to the output path with 10 partitions
+mergedDFWithRollingMed
+  .coalesce(10)  // Set the number of partitions to 10
+  .write
+  .format("csv")
+  .mode("overwrite")
+  .option("header", "true")
+  .save(outputPath)
+
+// View the contents of the output directory
+spark.read.format("csv").option("header", "true").load(outputPath).show()
