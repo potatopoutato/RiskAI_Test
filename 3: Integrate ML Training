@@ -1,0 +1,54 @@
+// Tasks 3: TASK 3 IS STILL UNDER DEVELOPMENT AND MIGHT PRODUCE ERRORS
+// Integrate the ML training process as a part of the data pipeline.
+// Save the resulting model to disk.
+// Persist any training metrics, such as loss and error values as log files.
+
+import org.apache.spark.ml.regression.RandomForestRegressor
+import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.{Pipeline, PipelineModel}
+import org.apache.spark.ml.evaluation.RegressionEvaluator
+
+// Define the feature columns
+val featureColumns = Array("vol_moving_avg", "adj_close_rolling_med")
+val targetColumn = "Volume"
+
+// Create a VectorAssembler to combine the feature columns into a vector column
+val assembler = new VectorAssembler()
+  .setInputCols(featureColumns)
+  .setOutputCol("features")
+
+// Split the data into training and test sets
+val Array(trainingData, testData) = mergedDFWithRollingMed.randomSplit(Array(0.8, 0.2), seed = 42)
+
+// Create a RandomForestRegressor model
+val rf = new RandomForestRegressor()
+  .setLabelCol(targetColumn)
+  .setFeaturesCol("features")
+  .setNumTrees(100)
+  .setSeed(42)
+
+// Create a pipeline with the VectorAssembler and RandomForestRegressor
+val pipeline = new Pipeline().setStages(Array(assembler, rf))
+
+// Train the pipeline on the training data
+val model = pipeline.fit(trainingData)
+
+// Make predictions on the test data
+val predictions = model.transform(testData)
+
+// Calculate evaluation metrics (e.g., mean absolute error, mean squared error)
+val evaluator = new RegressionEvaluator()
+  .setLabelCol(targetColumn)
+  .setPredictionCol("prediction")
+
+val mae = evaluator.setMetricName("mae").evaluate(predictions)
+val mse = evaluator.setMetricName("mse").evaluate(predictions)
+
+// Save the model to disk
+val modelOutputPath = "/data/model"  // Replace with the desired output path for the model
+model.write.overwrite().save(modelOutputPath)
+
+// Persist training metrics to log files
+val logPath = "/data/logs"  // Replace with the desired output path for the log files
+val logData = s"MAE: $mae\nMSE: $mse"
+sc.parallelize(Seq(logData)).coalesce(10).saveAsTextFile(logPath)
