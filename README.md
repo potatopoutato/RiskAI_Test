@@ -3,7 +3,7 @@ Work Sample for Data Engineer
 
 To run the docker file. You will have to download all the data for stock and efts from https://www.kaggle.com/datasets/jacksoncrow/stock-market-dataset and save it in a new directory as the docker files inside a folder named data.
 
-    //If the data was available in a remote directory directly accessible through docker, our docker could have been independent of 
+    //If the data is available in a remote directory directly accessible through docker, our docker could be independent of 
     //copying any data and just running the dockerfile independently:
     //# Create a directory for the data
     //RUN mkdir /data
@@ -11,6 +11,7 @@ To run the docker file. You will have to download all the data for stock and eft
     //# Download necessary files from a remote directory
     //RUN curl -O <remote_file_url> -o /data/<filename>
     //Since the files are in a Kaggle repository in .zip format, we will be copying them manually to our docker repository in folder named 'data'
+    //Now, to put data to HDFS(Hadoop distributed file storage) in Spark(Spark leverages in-memory processing and can integrate with Hadoop. Therefore, faster) using Scala(Language).
 
 Your directiories should be like: your-docker-repository-in-system/data/etfs/and stocks
 
