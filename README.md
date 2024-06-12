@@ -1,5 +1,6 @@
 # RiskAI_Test
-Work Sample for Data Engineer
+This is a work sample which takes Big data into prospect and works with almost 8000 csv files of stocks and etfs data to create a batch process and create a docker file(Docker is a software platform that allows you to build, test, and deploy applications quickly).
+This project uses spark streaming services.
 
 To run the docker file. You will have to download all the data for stock and efts from https://www.kaggle.com/datasets/jacksoncrow/stock-market-dataset and save it in a new directory as the docker files inside a folder named data.
 
@@ -15,12 +16,10 @@ To run the docker file. You will have to download all the data for stock and eft
 
 Your directiories should be like: your-docker-repository-in-system/data/etfs/and stocks
 
-your dockerfile should be here: your-docker-repository-in-system/Dockerfile
+Your dockerfile should be here: your-docker-repository-in-system/Dockerfile
 
 The Dockerfile is uploaded in the github repository.
 
 After the docker is set up and the scala environment with Spark is up and running you need to copy the code from Problem Set 1 to Problem Set 3 in the scala environment. Preferrably copy each problem seperately as problem 2 and 3 takes up some time depending on your hardware.
 
 Further Key Points are provided in the Work-Sample.docx file in this repository.
-
-ChatGPT was used to prompt and produce code for the tasks provided by using generating small batches of code and configuring it as required, most of ChatGPT was used after creating schema.
